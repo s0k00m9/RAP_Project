@@ -1,0 +1,7 @@
+@EndUserText.label: 'Purchase Order List Report App'
+define service YSAN_UI_PO_H {
+  expose YSAN_C_PO_H       as PurchaseOrderH;
+  expose YSAN_C_PO_I       as PurchaseOrderI;
+  expose YSAN_C_PO_H_UNMGD as PurchaseOrderH_UNMGD;
+  expose YSAN_C_PO_I_UNMGD as PurchaseOrderI_UNMGD;
+}

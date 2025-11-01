@@ -1,0 +1,107 @@
+    @Metadata.layer: #CORE
+@UI: {
+    headerInfo: {  typeName: 'Purchase Order Item',
+                              typeNamePlural: 'Purchase Order Items',
+                              title: {   type: #STANDARD, value: 'ItemNum'     },
+                              description: {  value: 'Matnr'  }
+    },
+    presentationVariant: [{  sortOrder: [{  by: 'ItemNum',  direction: #ASC  }],
+                                                 visualizations: [{  type: #AS_LINEITEM  }]
+                                           }]
+   }
+
+annotate entity YSAN_C_PO_I with
+{
+  @UI.facet: [
+         {    label: 'Purchase Order Item Information',
+                                 id: 'OrderItem1',
+                                 type: #COLLECTION  },
+          {    label: 'Purchase Order Item',
+                                 id: 'OrderItem',
+                                  parentId: 'OrderItem1',
+                                 type: #IDENTIFICATION_REFERENCE,
+                                 purpose: #STANDARD,
+                                 position: 10  },
+                                     {
+          id: 'Qty',
+          purpose: #STANDARD,
+          type: #FIELDGROUP_REFERENCE,
+          parentId: 'OrderItem1',
+          label: 'Quantity',
+          position: 30,
+          targetQualifier: 'QtyGroup'
+      },
+      {
+          id: 'Amnt',
+          purpose: #STANDARD,
+          type: #FIELDGROUP_REFERENCE,
+         parentId: 'OrderItem1',
+          label: 'Prices',
+          position: 20,
+          targetQualifier: 'PricesGroup'
+      }
+
+                                   ]
+
+
+
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  @EndUserText.label: 'PurchaseOrder Number'
+  PurchaseOrder;
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  @EndUserText.label: 'Item Number'
+  ItemNum;
+  @EndUserText.label: 'Article'
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  Matnr;
+  @EndUserText.label: 'Quantity'
+  @UI.lineItem: [{ position: 40 }]
+  //  @UI.identification: [{ position: 50 }]
+  @UI.fieldGroup: [{ qualifier: 'QtyGroup', position: 10 }]
+  Quantity;
+  @EndUserText.label: 'Unit'
+  //  @UI.lineItem: [{ position: 50 }]
+  //  @UI.identification: [{ position: 60 }]
+  //  @UI.fieldGroup: [{ qualifier: 'QtyGroup', position: 20 }]
+
+  Uom;
+  @EndUserText.label: 'Amount'
+  @UI.lineItem: [{ position: 60 }]
+  //  @UI.identification: [{ position: 70 }]
+  @UI.fieldGroup: [{ qualifier: 'PricesGroup', position: 10 }]
+
+  NetPrice;
+  //We don't need the reference fields explicit, since it would be clubbed with main amount field with @Semantics annotation
+  //  @UI.lineItem: [{ position:70 }]
+  //  @UI.identification: [{ position: 80 }]
+  //  @UI.fieldGroup: [{ qualifier: 'PricesGroup', position: 20 }]
+  @EndUserText.label: 'Currency'
+  @Consumption.valueHelpDefinition: [ {
+     entity: {
+       name: 'I_CURRENCY',
+       element: 'Currency'
+     }
+   } ]
+  Currency;
+
+  @EndUserText.label: 'SubTotals'
+  @UI.lineItem: [{ position: 80 }]
+  //  @UI.identification: [{ position: 70 }]
+  @UI.fieldGroup: [{ qualifier: 'PricesGroup', position: 20 }]
+  subtotal;
+  //  LocalCreatedBy;
+  //  LocalCreatedAt;
+  //  LocalLastChangedBy;
+  @UI.lineItem: [{ position: 90 }]
+  @UI.identification: [{ position: 40 }]
+  @EndUserText.label: 'Last Changed at'
+  LocalLastChangedAt;
+  @UI.hidden: true
+  LastChangedAt1;
+  /* Associations */
+  //  _order;
+
+}

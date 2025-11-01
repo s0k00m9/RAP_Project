@@ -1,0 +1,93 @@
+@Metadata.layer: #CORE
+@UI:{ headerInfo: {  typeName: 'Purchase Order',
+                   typeNamePlural: 'Purchase Orders',
+                   title: {   type: #STANDARD, value: 'PurchaseOrder'     },
+                              description: {  value: 'Vendor'  }
+    },
+    presentationVariant: [{  sortOrder: [{  by: 'PurchaseOrder',  direction: #ASC  }],
+                                                 visualizations: [{  type: #AS_LINEITEM  }]
+                                           }]
+   }
+
+@Search.searchable: true
+annotate entity YSAN_C_PO_H_UNMGD with
+{
+
+  @UI.facet: [  {   label: 'Order Information',
+                               id: 'OrderInfo',
+                               type: #COLLECTION,  position: 10    },
+                          {    label: 'Order Header',
+                               id: 'Order',
+                               type: #IDENTIFICATION_REFERENCE,
+                               purpose: #STANDARD,
+                               parentId: 'OrderInfo',
+                               position: 10 },
+                          {    id: 'Items',
+                               purpose: #STANDARD,
+                               type: #LINEITEM_REFERENCE,
+                               label: 'Order Items',
+                               position: 20,
+                               targetElement: '_item'
+     } ]
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  @EndUserText.label: 'PurchaseOrder Number'
+  @Search.defaultSearchElement: true      
+  PurchaseOrder;
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  @EndUserText.label: 'Vendor'
+  @Search.defaultSearchElement: true      
+  Vendor;
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  @EndUserText.label: 'Total PO Amount'
+
+  Grossamount;
+  @UI.identification: [{ position: 40 }]
+  @Consumption.valueHelpDefinition: [ {
+    entity: {
+      name: 'I_CURRENCY',
+      element: 'Currency'
+    }
+  } ]
+
+  Currency;
+        @UI.lineItem: [{position: 40, importance: #HIGH } ,
+                                { type: #FOR_ACTION,
+                                 dataAction: 'confirm_order' ,
+                                  label: 'Confirm Order'}]
+  
+  @UI.identification: [{ position: 50 },  { type: #FOR_ACTION,
+                                 dataAction: 'confirm_order' ,
+                                  label: 'Confirm Order'}]
+  @EndUserText.label: 'Order Status Code'
+  @Consumption.valueHelpDefinition: [{   entity: {
+    name: 'YSAN_I_PO_STATUS',
+    element: 'StatusCode'
+  },
+  additionalBinding: [{ element: 'Text', localElement: 'StatusText'
+                        }]}]
+  Status;
+    @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 60 }]
+  @EndUserText.label: 'Order Status Description'
+  @Search.defaultSearchElement: true      
+  StatusText;
+  @UI.identification: [{ position: 70 }]
+  @EndUserText.label: 'User Created  by'
+  LocalCreatedBy;
+  @UI.identification: [{ position: 80 }]
+  @EndUserText.label: 'User Created at'
+  LocalCreatedAt;
+  @UI.hidden: true
+  LocalLastChangedBy;
+  @UI.hidden: true
+  LocalLastChangedAt;
+  @UI.hidden: true
+  LastChangedAt;
+  /* Associations */
+
+  //    _item;
+
+}
