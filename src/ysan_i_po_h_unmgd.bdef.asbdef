@@ -1,0 +1,38 @@
+unmanaged implementation in class zbp_san_i_po_h_unmgd unique;
+strict ( 2 );
+with draft;
+define behavior for YSAN_I_PO_H_UNMGD alias order
+draft table ysan_order_h_d1
+late numbering
+lock master total etag LastChangedAt
+etag master LastChangedAt
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Resume;
+  draft action Discard;
+  draft determine action Prepare;
+
+  field ( readonly ) PurchaseOrder;
+  association _item { create; with draft; }
+}
+
+define behavior for YSAN_I_PO_I_UNMGD alias item
+draft table ysan_order_i_d1
+late numbering
+lock dependent by _order
+authorization dependent by _order
+etag dependent by _order
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) PurchaseOrder, ItemNum;
+  association _order { with draft; }
+}

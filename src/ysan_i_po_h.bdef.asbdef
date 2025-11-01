@@ -1,0 +1,71 @@
+managed implementation in class zbp_san_i_po_h unique;
+strict ( 2 );
+with draft;
+
+define behavior for YSAN_I_PO_H alias order
+persistent table ysan_order_h
+draft table ysan_order_h_d
+lock master total etag LastChangedAt
+authorization master ( instance )
+early numbering
+etag master LastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete ( features : instance );
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Resume;
+  draft action Discard;
+  draft determine action Prepare { validation validate_vendor; }
+  validation validate_vendor on save { create; update; field Vendor; }
+  action ( features : instance ) confirm_order result [1] $self;
+  side effects { action confirm_order affects field status; }
+
+  field ( readonly ) PurchaseOrder,
+  Grossamount,
+  Currency,
+  StatusText;
+  //  field ( mandatory : create )
+  //  Vendor;
+  mapping for ysan_order_h
+    {
+      PurchaseOrder = po_num;
+      Vendor        = vendor;
+      Status        = status;
+      StatusText    = status_text;
+      Grossamount   = grossamount;
+      Currency      = currency;
+    }
+  association _item { create; with draft; }
+}
+
+define behavior for YSAN_I_PO_I alias item
+persistent table ysan_order_i
+draft table ysan_order_i_d
+lock dependent by _order
+authorization dependent by _order
+etag dependent by _order
+early numbering
+{
+  update ( precheck );
+  delete ( features : instance );
+  field ( readonly ) PurchaseOrder, ItemNum, subtotal;
+  determination determine_sub_totals on modify { create; field NetPrice; field Quantity; } //here mentioning update is going for infinite loop of determine on modify, hence removed
+  determination determine_header_totals on modify { create; delete; field NetPrice; field Quantity; }
+  side effects { field NetPrice affects field subtotal, field _order.Grossamount; }
+//                 field Quantity affects field subtotal, field _order.Grossamount; }
+
+  mapping for ysan_order_i
+    {
+      PurchaseOrder = po_num;
+      ItemNum       = item_num;
+      Matnr         = matnr;
+      Quantity      = quantity;
+      Uom           = uom;
+      NetPrice      = net_price;
+      Currency      = currency;
+//      subtotal      = subtotal;
+    }
+  association _order { with draft; }
+}

@@ -1,0 +1,5 @@
+CLASS zbp_san_i_po_h_unmgd DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ysan_i_po_h_unmgd.
+ENDCLASS.
+
+CLASS zbp_san_i_po_h_unmgd IMPLEMENTATION.
+ENDCLASS.
